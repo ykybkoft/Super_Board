@@ -1,4 +1,9 @@
 package study.supercodingboard.controller;
 
-public class PostController {
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class PostController
+{
+    
 }
