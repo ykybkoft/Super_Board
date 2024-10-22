@@ -1,0 +1,51 @@
+package study.supercodingboard.service;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import study.supercodingboard.dto.PostDto;
+import study.supercodingboard.dto.PostMessage;
+import study.supercodingboard.entity.Post;
+import study.supercodingboard.repository.PostRepository;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class PostService {
+
+    private final PostRepository postRepository;
+
+    public PostMessage savePost(PostDto postDto) {
+        Post savedPost = postRepository.save(Post.savePost(postDto));
+
+        if(savedPost.getId() > 0){
+            return PostMessage.builder()
+                    .message("게시물이 성공적으로 작성되었습니다.")
+                    .build();
+        }else{
+          throw new IllegalStateException("게시물 작성이 실패하였습니다.");
+        }
+    }
+
+    public List<PostDto> findAll() {
+        return postRepository.findAll().stream()
+                .map(post -> post.getPostDto(post))
+                .toList();
+    }
+
+    public PostMessage updatePost(Long postId, PostDto postDto) {
+        Post post = postRepository.findById(postId).orElseThrow(IllegalStateException::new);
+
+        Post updatePost = postRepository.save(post.updatePost(postDto));
+
+        if(updatePost.getId() > 0){
+            return PostMessage.builder()
+                    .message("게시글이 설공적으로 수정 되었습니다.")
+                    .build();
+        }else{
+            throw new IllegalStateException("게시글 수정이 실패 했습니다.");
+        }
+    }
+}
