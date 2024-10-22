@@ -11,9 +11,9 @@ import study.supercodingboard.service.PostService;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
-@RequiredArgsConstructor
 @Slf4j
 public class PostController {
 
