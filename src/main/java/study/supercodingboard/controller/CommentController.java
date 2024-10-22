@@ -48,4 +48,3 @@ public class CommentController
         CommentResponse response = new CommentResponse("댓글이 성공적으로 삭제되었습니다.");
         return ResponseEntity.ok(response); // JSON 형식으로 응답 반환
     }
-}
