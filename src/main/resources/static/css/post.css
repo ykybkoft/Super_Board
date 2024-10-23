@@ -1,0 +1,67 @@
+table {
+    margin: auto;
+    width: 700px;
+    border-radius: 5px;
+    border-collapse: collapse;
+    border-top: none;
+}
+.header {
+    background-color: rgb(218, 231, 255);
+    text-align: center;
+}
+.table td, .table th {
+    border-bottom: 1px lightgray solid;
+    height: 30px;
+    font-size: 14px;
+}
+.num {
+    width: 50px;
+}
+.title {
+    width: 500px;
+}
+.body {
+    text-align: center;
+}
+.body .title {
+    text-align: left;
+}
+button {
+    width: 100px;
+    height: 40px;
+    font-size: 15px;
+    border: 0;
+    outline: 1.5px rgb(68, 136, 244) solid;
+    border-radius: 5px;
+    padding-left: 10px;
+    background-color: rgb(164, 199, 255);
+    margin-right: 10px; /* 버튼 사이의 간격 */
+    cursor: pointer;
+}
+button:active {
+    outline: 1.5px rgb(27, 76, 155) solid;
+    background-color: rgb(68, 136, 244);
+}
+.logout-button {
+    background-color: rgb(255, 99, 71); /* 빨간색 */
+    outline: 1.5px rgb(255, 69, 58) solid; /* 더 어두운 빨간색 */
+}
+.logout-button:active {
+    background-color: rgb(255, 50, 50); /* 클릭 시 더 어두운 빨간색 */
+}
+.search-form {
+    text-align: center;
+    margin: 10px 0; /* 간격 조정 */
+}
+.search-form input[type="email"] {
+    width: 300px;
+    height: 30px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid lightgray;
+    margin-right: 10px;
+}
+.author {
+    width: 100px; /* 원하는 너비로 조정 */
+    text-align: left; /* 왼쪽 정렬 */
+}
