@@ -25,7 +25,7 @@ public class PostService {
                     .message("게시물이 성공적으로 작성되었습니다.")
                     .build();
         }else{
-          throw new IllegalStateException("게시물 작성이 실패하였습니다.");
+            throw new IllegalStateException("게시물 작성이 실패하였습니다.");
         }
     }
 
@@ -55,4 +55,14 @@ public class PostService {
         return posts;
     }
 
+    public PostDto findById(Long postId) {
+        return postRepository.findById(postId)
+                .map(post -> post.getPostDto(post))
+                .orElseThrow(() -> new RuntimeException("해당 게시글을 찾을 수 없습니다.: " + postId));
+    }
+
+    public PostMessage deletePost(Long postId) {
+        postRepository.deleteById(postId);
+        return PostMessage.builder().message("게시글이 삭제 되었습니다.").build();
+    }
 }

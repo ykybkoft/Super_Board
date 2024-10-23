@@ -37,11 +37,19 @@ public class PostController {
     }
 
     /**
-     * id를 통한 특정 게시물 조회 api
+     * id를 통한 특정 게시물 수정 api
      */
     @PutMapping("/posts/{post_id}")
     public ResponseEntity<PostMessage> updatePost(@RequestBody PostDto postDto, @PathVariable(name = "post_id") Long postId){
         return ResponseEntity.ok(postService.updatePost(postId, postDto));
+    }
+
+    /**
+     * id를 통한 특정 게시물 삭제 api
+     */
+    @DeleteMapping("/posts/{post_id}")
+    public ResponseEntity<PostMessage> deletePost(@PathVariable(name = "post_id") Long postId){
+        return ResponseEntity.ok(postService.deletePost(postId));
     }
 
     /**
