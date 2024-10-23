@@ -48,4 +48,11 @@ public class PostService {
             throw new IllegalStateException("게시글 수정이 실패 했습니다.");
         }
     }
+
+    public List<PostDto> findByAuthor(String Author) {
+        List<PostDto> posts = postRepository.findByAuthor(Author).stream().map(post -> post.getPostDto(post)).toList();
+        log.info("작성일 : {}", posts.get(0).getCreatedAt().toString());
+        return posts;
+    }
+
 }

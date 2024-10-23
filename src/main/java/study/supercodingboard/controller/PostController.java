@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import study.supercodingboard.dto.PostDto;
 import study.supercodingboard.dto.PostMessage;
+import study.supercodingboard.entity.Post;
 import study.supercodingboard.service.PostService;
 
 import java.util.List;
@@ -41,5 +42,13 @@ public class PostController {
     @PutMapping("/posts/{post_id}")
     public ResponseEntity<PostMessage> updatePost(@RequestBody PostDto postDto, @PathVariable(name = "post_id") Long postId){
         return ResponseEntity.ok(postService.updatePost(postId, postDto));
+    }
+
+    /**
+     * email을 통한 특정 게시물 조회
+     */
+    @GetMapping("/posts/search")
+    public ResponseEntity<List<PostDto>> searchPost(@RequestParam(name = "author_email") String Author) {
+        return ResponseEntity.ok().body(postService.findByAuthor(Author));
     }
 }
