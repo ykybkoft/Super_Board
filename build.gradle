@@ -44,6 +44,10 @@ dependencies {
 
 }
 
+tasks.processResources {
+    doNotTrackState("build/resources/main/static/asset-manifest.json")
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
