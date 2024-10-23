@@ -16,10 +16,12 @@ import org.springframework.util.StreamUtils;
 import study.supercodingboard.dto.user.CustomUserDetails;
 import study.supercodingboard.dto.user.JoinDTO;
 
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Iterator;
+
 
 
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
@@ -36,6 +38,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         JoinDTO loginDTO = new JoinDTO();
+
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
