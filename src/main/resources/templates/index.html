@@ -5,16 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="/js/post.js" defer></script>
   <link rel="stylesheet" type="text/css" href="/css/post.css">
-  <title>게시판</title>
-
-  <script>
-
-  </script>
+  <title>SUPER CODING</title>
 </head>
 <body>
 <table class="table">
   <tr>
-    <td colspan="4" style="text-align: center;"><h2>게시판</h2></td>
+    <td colspan="4" style="text-align: center;"><h2>SUPER CODING</h2></td>
   </tr>
   <tr>
     <td colspan="4">
@@ -28,14 +24,16 @@
     <td class="num">번호</td>
     <td class="title">제목</td>
     <td class="author">작성자</td>
-    <td class="author">작성일</td>
+    <td class="date">작성일</td>
   </tr>
   <tbody class="body">
   <tr th:each="post : ${posts}">
     <td th:text="${post.id}"></td>
-    <td class="title" th:text="${post.title}"></td>
+    <td class="title">
+      <a th:href="@{'/posts/' + ${post.id}}" th:text="${post.title}"></a>
+    </td>
     <td class="author" th:text="${post.author}"></td>
-    <td class="author" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}"></td>
+    <td class="date" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}"></td>
   </tr>
   </tbody>
 </table>
@@ -43,7 +41,7 @@
 <table>
   <tr>
     <td>
-      <button onclick="location.href='writeForm.html'">글쓰기</button>
+      <button onclick="location.href='/boardWriteForm'">글쓰기</button>
       <button class="logout-button" onclick="location.href='logout.html'">로그아웃</button>
     </td>
   </tr>
