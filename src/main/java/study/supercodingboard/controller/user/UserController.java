@@ -1,9 +1,10 @@
-package study.supercodingboard.controller;
+package study.supercodingboard.controller.user;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import study.supercodingboard.dto.user.JoinDTO;
 import study.supercodingboard.dto.user.LogoutDTO;
 import study.supercodingboard.dto.user.ResponseDTO;
@@ -37,6 +38,8 @@ public class UserController {
         ResponseDTO response = new ResponseDTO("로그아웃되었습니다.");
         return ResponseEntity.ok(response);
     }
+
+
 
 
 
