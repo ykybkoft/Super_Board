@@ -26,6 +26,7 @@ public class UserService {
 
         Boolean isExist = userRepository.existsByUsername(username);
         if (isExist){
+
             response.setMessage("회원가입에 실패하셨습니다.(이메일 중복)");
             return response;
         }

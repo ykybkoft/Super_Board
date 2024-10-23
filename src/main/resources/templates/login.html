@@ -4,71 +4,8 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
+    <link rel="stylesheet" type="text/css" href="/css/login.css">
     <title>로그인 및 회원가입</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-
-        .login-container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            max-width: 300px;
-            margin: 80px auto 0;
-        }
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
-        }
-        input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        input[type="button"] {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        input[type="button"]:hover {
-            background-color: #45a049;
-        }
-        .join {
-            text-align: center;
-            margin-top: 15px;
-        }
-        .join a {
-            display: block;
-            margin: 5px 0;
-            padding: 10px;
-            color: #fff;
-            background-color: #4CAF50;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .join a:hover {
-            background-color: #45a049;
-            text-decoration: none;
-        }
-    </style>
 
 </head>
 <body>
@@ -88,33 +25,43 @@
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
-        // JSON 형태의 데이터 생성
         const data = {
             email: email,
             password: password
         };
 
-        // Fetch API를 사용해 POST 요청 전송
         fetch(action, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data)  // 데이터를 JSON 형태로 변환하여 전송
+            body: JSON.stringify(data)
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    if(action === '/api/login'){
+                        throw new Error("로그인에 실패하셨습니다.");
+                    }else{
+                        throw new Error("회원가입에 실패하셨습니다.(이메일 중복)");
+                    }
+
                 }
-                return response.json();
+                return response;
             })
             .then(data => {
-                console.log('Success:', data);
-                // 요청 성공 시 처리
+                console.log('Success');
+                if (action === '/api/login') {
+
+                    localStorage.setItem('token', data.headers.get('Authorization'));
+                    alert('로그인 성공');
+                    window.history.back();
+                } else {
+                    alert('회원가입 성공');
+                    window.location.reload();
+                }
             })
             .catch((error) => {
-                console.error('Error:', error);
-                // 요청 실패 시 처리
+                alert(error.message);
             });
     }
 </script>
