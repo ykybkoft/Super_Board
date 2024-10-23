@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="/js/post.js" defer></script>
+  <link rel="stylesheet" type="text/css" href="/css/post.css">
+  <title>게시판</title>
+
+  <script>
+
+  </script>
+</head>
+<body>
+<table class="table">
+  <tr>
+    <td colspan="4" style="text-align: center;"><h2>게시판</h2></td>
+  </tr>
+  <tr>
+    <td colspan="4">
+      <div class="search-form">
+        <label for="searchEmail"></label><input type="email" id="searchEmail" placeholder="이메일로 검색" required>
+        <button onclick="searchByEmail()">검색</button>
+      </div>
+    </td>
+  </tr>
+  <tr class="header">
+    <td class="num">번호</td>
+    <td class="title">제목</td>
+    <td class="author">작성자</td>
+    <td class="author">작성일</td>
+  </tr>
+  <tbody class="body">
+  <tr th:each="post : ${posts}">
+    <td th:text="${post.id}"></td>
+    <td class="title" th:text="${post.title}"></td>
+    <td class="author" th:text="${post.author}"></td>
+    <td class="author" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}"></td>
+  </tr>
+  </tbody>
+</table>
+<br>
+<table>
+  <tr>
+    <td>
+      <button onclick="location.href='writeForm.html'">글쓰기</button>
+      <button class="logout-button" onclick="location.href='logout.html'">로그아웃</button>
+    </td>
+  </tr>
+</table>
+</body>
+</html>
