@@ -7,9 +7,7 @@
   <link rel="stylesheet" type="text/css" href="/css/post.css">
   <title>게시판</title>
 
-  <script>
 
-  </script>
 </head>
 <body>
 <table class="table">
@@ -44,9 +42,63 @@
   <tr>
     <td>
       <button onclick="location.href='writeForm.html'">글쓰기</button>
-      <button class="logout-button" onclick="location.href='logout.html'">로그아웃</button>
+      <button class="user-button" id="login-button" onclick="location.href='http://localhost:8080/api/user'" >로그인</button>
+      <button class="user-button" id="logout-button" onclick="clickLogout()" >로그아웃</button>
     </td>
   </tr>
 </table>
+
+<script>
+  const token = window.localStorage.getItem('token');
+  const loginBtn = document.getElementById('login-button');
+  const logoutBtn = document.getElementById('logout-button');
+
+  function clickLogout(){
+    const email = getEmailFromToken();
+    const data = {
+      email : email
+    };
+
+    fetch('/api/logout',{
+      method : 'POST',
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    }).then( response =>{
+      return response.json();
+    }).then(data =>{
+      localStorage.removeItem('token');
+      alert(data.message);
+      window.location.reload();
+    });
+  }
+
+  function getEmailFromToken() {
+
+
+    const tokenParts = token.split('.');
+    const payload = tokenParts[1];
+    const decodedPayload = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+
+    const payloadJson = JSON.parse(decodedPayload);
+
+
+    return payloadJson.username;
+  }
+
+  function checkUser(){
+
+    if(token === null){
+      logoutBtn.style.display='none';
+
+    }else{
+      loginBtn.style.display='none';
+    }
+  }
+
+  checkUser();
+
+</script>
 </body>
 </html>
