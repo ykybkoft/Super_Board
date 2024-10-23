@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시판 상세페이지</title>
+
+  <style>
+    /* 배경 설정 */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f9f9f9; /* 전체 배경색 */
+      margin: 0; /* 기본 마진 제거 */
+      padding: 20px; /* 전체 여백 추가 */
+      display: flex;
+      flex-direction: column; /* 세로 방향으로 정렬 */
+      align-items: center; /* 가로 중앙 정렬 */
+    }
+
+    /* 로고 영역 */
+    .logo {
+      margin-bottom: 20px; /* 로고와 내용 사이 여백 */
+      font-size: 2rem; /* 로고 크기 */
+      font-weight: bold; /* 로고 굵기 */
+    }
+
+    .post-container {
+      background-color: #ffffff; /* 게시글 배경색 */
+      padding: 2rem; /* 패딩 추가 */
+      border-radius: 8px; /* 약간의 둥글기 추가 */
+      width: 80%;
+      max-width: 800px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 추가 */
+    }
+
+    /* 게시글 제목 스타일 */
+    .post-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .post-title {
+      font-size: 2.5rem;
+      color: #333;
+      margin-bottom: 0.5rem; /* 제목 아래 여백 추가 */
+      border-bottom: 2px solid #87CEEB; /* 제목 아래 구분선 색상 변경 */
+      padding-bottom: 0.5rem; /* 구분선과 제목 사이 여백 추가 */
+    }
+
+    .post-meta {
+      font-size: 0.9rem;
+      color: #888;
+      margin-bottom: 1rem; /* 메타 정보 아래 여백 추가 */
+    }
+
+    /* 게시글 내용 스타일 */
+    .post-content {
+      line-height: 1.8;
+      color: #555;
+      margin-bottom: 2rem;
+    }
+
+    /* 버튼 스타일 */
+    .button {
+      background-color: #87CEEB; /* 기본 버튼 색상을 연한 하늘색으로 변경 */
+      color: white;
+      border: none;
+      padding: 10px 15px; /* 패딩 조정 */
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 1rem;
+      margin: 5px 2px;
+      cursor: pointer;
+      border-radius: 5px; /* 둥글게 조정 */
+      transition: background-color 0.3s; /* 버튼 호버 시 색상 변화 효과 */
+    }
+
+    .button:hover {
+      background-color: #7EC0EE; /* 호버 시 색상 변화 (어두운 하늘색) */
+    }
+
+    /* 삭제 버튼 스타일 */
+    .button-danger {
+      background-color: #f44336; /* 삭제 버튼 색상 */
+    }
+
+    .button-danger:hover {
+      background-color: #e53935; /* 삭제 버튼 호버 시 색상 변화 */
+    }
+
+    /* 댓글 영역 스타일 */
+    .comment-section {
+      margin-top: 2rem; /* 댓글 섹션 위쪽 여백 */
+      border-top: 1px solid #ccc; /* 댓글 구분선 */
+      padding-top: 1rem; /* 구분선 아래 여백 */
+    }
+
+    /* 댓글 입력 필드 스타일 */
+    .comment-input {
+      width: 100%; /* 너비를 100%로 설정 */
+      padding: 10px; /* 패딩 추가 */
+      border: 1px solid #ccc; /* 테두리 색상 */
+      border-radius: 5px; /* 둥글게 조정 */
+      margin-bottom: 1rem; /* 입력 필드와 버튼 사이 여백 */
+    }
+
+    /* 댓글 목록 스타일 */
+    .comment {
+      padding: 0.5rem;
+      border-bottom: 1px solid #eee; /* 댓글 구분선 */
+      color: #555;
+      display: flex; /* 댓글과 버튼을 가로로 정렬 */
+      justify-content: space-between; /* 양 끝으로 정렬 */
+      align-items: center; /* 수직 중앙 정렬 */
+    }
+  </style>
+</head>
+<body>
+<div class="logo">SUPER CODING</div> <!-- 로고 영역 추가 -->
+
+<div class="post-container">
+  <div class="post-header">
+    <h3 class="post-title" th:text="${post.title}">게시글 제목</h3>
+    <p class="post-meta">작성자: <span th:text="${post.author}">작성자 이름</span> |
+      작성일: <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">2024-10-23</span></p>
+  </div>
+
+  <div class="post-content">
+    <p th:text="${post.content}">
+      게시글의 내용이 여기에 표시됩니다. 긴 텍스트일 경우 자동으로 줄 바꿈이 됩니다.
+    </p>
+  </div>
+
+  <div class="post-footer">
+    <button class="button" th:onclick="'location.href=\'/postUpdate/' + ${post.id} + '\''">수정하기</button>
+    <button class="button button-danger" th:onclick="'deletePost(' + ${post.id} + ')'">삭제하기</button>
+    <button class="button" onclick="location.href='/'">목록으로</button>
+  </div>
+</div>
+
+<!-- 댓글 섹션 시작 -->
+<div class="comment-section">
+  <h2>댓글</h2>
+  <div id="commentList">
+    <!-- 댓글 목록은 여기에 추가됩니다 -->
+  </div>
+
+  <textarea class="comment-input" id="commentInput" placeholder="댓글을 작성하세요..."></textarea>
+  <button class="button" onclick="addComment()">댓글 작성</button>
+</div>
+<!-- 댓글 섹션 끝 -->
+
+<script>
+  function deletePost(postId) {
+    if (confirm("정말로 이 게시글을 삭제하시겠습니까?")) {
+      // DELETE 요청 보내기
+      fetch(`/api/posts/${postId}`, {
+        method: 'DELETE'
+      }).then(response => {
+        if (response.ok) {
+          alert("게시글이 삭제되었습니다.");
+          window.location.href = '/'; // 인덱스 페이지로 이동
+        } else {
+          alert("게시글 삭제에 실패했습니다.");
+        }
+      }).catch(error => {
+        console.error('Error:', error);
+        alert("서버 오류가 발생했습니다.");
+      });
+    }
+  }
+</script>
+
+</body>
+</html>
