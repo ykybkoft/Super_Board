@@ -17,9 +17,10 @@ public class CommentService {
     private final PostRepository postRepository;
 
     public void createComment(Comment comment, Long commentId) {
-        Optional<Post> post = postRepository.findById(comment.getPostId());
+        Optional<Post> post = postRepository.findById(commentId);
         String author = post.get().getAuthor(); // 게시물 작성자 설정
         comment.setAuthor(author);
+        comment.setPost(post.get());
         try {
             commentRepository.save(comment);
         } catch (Exception e) {
