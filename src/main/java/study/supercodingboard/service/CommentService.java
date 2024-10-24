@@ -1,40 +1,52 @@
 package study.supercodingboard.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import study.supercodingboard.entity.Comment;
+import study.supercodingboard.entity.Post;
 import study.supercodingboard.repository.CommentRepository;
+import study.supercodingboard.repository.PostRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
 
-    @Autowired
-    public CommentService(CommentRepository commentRepository) {
-        this.commentRepository = commentRepository; // 생성자에서 CommentRepository 초기화
+    public void createComment(Comment comment, Long commentId) {
+        Optional<Post> post = postRepository.findById(comment.getPostId());
+        String author = post.get().getAuthor(); // 게시물 작성자 설정
+        comment.setAuthor(author);
+        try {
+            commentRepository.save(comment);
+        } catch (Exception e) {
+            e.printStackTrace(); // 오류 로그 출력
+            throw new RuntimeException("댓글 저장에 실패했습니다."); // 적절한 예외 처리
+        }
     }
 
-    public void createComment(Comment comment) {
-        commentRepository.save(comment); // 댓글을 저장하는 메서드 호출
-    }
-
-    public List<Comment> findAll() {
-        return commentRepository.findAll(); // 데이터베이스에서 모든 댓글을 조회하여 반환
-    }
-
+    // 댓글 수정
     public void updateComment(Long commentId, String content) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new RuntimeException());
-        comment.setContent(content); // 댓글 내용 수정
-        commentRepository.save(comment); // 변경 사항 저장
+                .orElseThrow(() -> new RuntimeException("댓글을 찾을 수 없습니다."));
+        comment.setContent(content);
+        commentRepository.save(comment);
     }
 
+    // 댓글 삭제
     public void deleteComment(Long commentId) {
-        if (!commentRepository.existsById(commentId)) {
-            throw new RuntimeException(); // 존재하지 않는 경우 예외 처리
-        }
-        commentRepository.deleteById(commentId); // 댓글 삭제
+        commentRepository.deleteById(commentId);
+    }
+
+    public List<Comment> findByPostId(Long postId) {
+        return commentRepository.findByPostId(postId);
+    }
+
+    // 모든 댓글 조회 (현재 사용되지 않음)
+    public List<Comment> findAll() {
+        return commentRepository.findAll();
     }
 }

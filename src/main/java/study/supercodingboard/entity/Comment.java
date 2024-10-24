@@ -9,14 +9,14 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "comments")
-public class Comment extends BaseTime { // BaseTime 클래스 상속
+public class Comment extends BaseTime { // BaseTime 클래스를 상속받음
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; // 댓글 ID
 
-    private String content;
-    private String author;
+    private String content; // 댓글 내용
+    private String author; // 댓글 작성자
 
     @JsonProperty("post_id")
     private Long postId; // 게시물 ID
