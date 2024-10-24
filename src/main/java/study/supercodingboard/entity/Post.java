@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import study.supercodingboard.dto.PostDto;
+import study.supercodingboard.entity.user.UserEntity;
+
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -21,6 +24,12 @@ public class Post extends BaseTime{
     private String title;
     private String content;
     private String author;
+
+    @OneToMany(mappedBy = "post")
+    private List<Comment> comments;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private UserEntity user;
 
     public static Post savePost(PostDto postDto) {
         return Post.builder()

@@ -89,6 +89,14 @@
       background-color: #e53935; /* 삭제 버튼 호버 시 색상 변화 */
     }
 
+    /* 게시글 하단 스타일 */
+    .post-footer {
+      display: flex; /* Flexbox로 설정 */
+      justify-content: space-between; /* 양쪽 끝으로 정렬 */
+      align-items: center; /* 수직 중앙 정렬 */
+      margin-top: 1rem; /* 상단 여백 */
+    }
+
     /* 댓글 영역 스타일 */
     .comment-section {
       margin-top: 2rem; /* 댓글 섹션 위쪽 여백 */
@@ -114,6 +122,16 @@
       justify-content: space-between; /* 양 끝으로 정렬 */
       align-items: center; /* 수직 중앙 정렬 */
     }
+
+    /* 목록 버튼 스타일 */
+    .button-list {
+      background-color: #90EE90; /* 연한 그린 색상 */
+      color: white;
+    }
+
+    .button-list:hover {
+      background-color: #7CFC7C; /* 호버 시 색상 변화 (어두운 그린) */
+    }
   </style>
 </head>
 <body>
@@ -133,9 +151,11 @@
   </div>
 
   <div class="post-footer">
-    <button class="button" th:onclick="'location.href=\'/postUpdate/' + ${post.id} + '\''">수정하기</button>
-    <button class="button button-danger" th:onclick="'deletePost(' + ${post.id} + ')'">삭제하기</button>
-    <button class="button" onclick="location.href='/'">목록으로</button>
+    <div>
+      <button class="button" id="editButton" th:onclick="'location.href=\'/postUpdate/' + ${post.id} + '\''">수정하기</button>
+      <button class="button button-danger" id="deleteButton" th:onclick="'deletePost(' + ${post.id} + ')'">삭제하기</button>
+    </div>
+    <button class="button button-list" onclick="location.href='/'">목록으로</button> <!-- 목록 버튼 색상 변경 -->
   </div>
 </div>
 
@@ -155,6 +175,19 @@
 <!-- 댓글 섹션 끝 -->
 
 <script>
+  // 페이지 로드 시 실행
+  window.onload = function() {
+    const token = localStorage.getItem('token');
+
+    // 토큰이 없으면 버튼 숨기기
+    if (!token) {
+      document.getElementById('editButton').style.display = 'none';
+      document.getElementById('deleteButton').style.display = 'none';
+      document.getElementById('commentInput').style.display = 'none'; // 댓글 입력란도 숨기기
+      document.getElementById('commentButton').style.display = 'none'; // 댓글 작성 버튼도 숨기기
+    }
+  };
+
   function deletePost(postId) {
     if (confirm("정말로 이 게시글을 삭제하시겠습니까?")) {
       // DELETE 요청 보내기
