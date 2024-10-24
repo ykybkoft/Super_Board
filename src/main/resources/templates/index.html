@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="/js/post.js" defer></script>
   <link rel="stylesheet" type="text/css" href="/css/post.css">
-
   <title>SUPER CODING</title>
-
 </head>
 <body>
 <table class="table">
@@ -43,11 +41,9 @@
 <table>
   <tr>
     <td>
-
-      <button onclick="location.href='/boardWriteForm'">글쓰기</button>
-      <button class="user-button" id="login-button" onclick="location.href='http://localhost:8080/api/user'" >로그인</button>
-      <button class="user-button" id="logout-button" onclick="clickLogout()" >로그아웃</button>
-
+      <button onclick="handleWritePost()">글쓰기</button>
+      <button class="user-button" id="login-button" onclick="location.href='http://localhost:8080/api/user'">로그인</button>
+      <button class="user-button" id="logout-button" onclick="clickLogout()">로그아웃</button>
     </td>
   </tr>
 </table>
@@ -59,50 +55,49 @@
 
   function clickLogout(){
     const email = getEmailFromToken();
-    const data = {
-      email : email
-    };
+    const data = { email: email };
 
-    fetch('/api/logout',{
-      method : 'POST',
-      headers:{
+    fetch('/api/logout', {
+      method: 'POST',
+      headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(data)
-    }).then( response =>{
-      return response.json();
-    }).then(data =>{
-      localStorage.removeItem('token');
-      alert(data.message);
-      window.location.reload();
-    });
+    })
+            .then(response => response.json())
+            .then(data => {
+              localStorage.removeItem('token');
+              alert(data.message);
+              window.location.reload();
+            });
   }
 
   function getEmailFromToken() {
-
-
     const tokenParts = token.split('.');
     const payload = tokenParts[1];
     const decodedPayload = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
-
     const payloadJson = JSON.parse(decodedPayload);
-
-
     return payloadJson.username;
   }
 
-  function checkUser(){
+  function checkUser() {
+    if (token === null) {
+      logoutBtn.style.display = 'none';
+    } else {
+      loginBtn.style.display = 'none';
+    }
+  }
 
-    if(token === null){
-      logoutBtn.style.display='none';
-
-    }else{
-      loginBtn.style.display='none';
+  function handleWritePost() {
+    if (token === null) {
+      alert('로그인이 필요합니다.');
+      location.href = 'http://localhost:8080/api/user'; // 로그인 요청 페이지로 이동
+    } else {
+      location.href = '/boardWriteForm'; // 글쓰기 페이지로 이동
     }
   }
 
   checkUser();
-
 </script>
 </body>
 </html>
