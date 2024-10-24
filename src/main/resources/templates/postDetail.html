@@ -161,13 +161,16 @@
 
 <!-- 댓글 섹션 시작 -->
 <div class="comment-section">
+
   <h2>댓글</h2>
   <div id="commentList">
     <!-- 댓글 목록은 여기에 추가됩니다 -->
+
   </div>
 
   <textarea class="comment-input" id="commentInput" placeholder="댓글을 작성하세요..."></textarea>
-  <button class="button" id="commentButton" onclick="addComment()">댓글 작성</button>
+  <button class="button" th:onclick="'addComment(' + ${post.id} + ')'">댓글 작성</button>
+
 </div>
 <!-- 댓글 섹션 끝 -->
 
@@ -203,6 +206,155 @@
       });
     }
   }
+
+  // 댓글 작성
+  function addComment() {
+    const commentText = document.getElementById('commentInput').value;
+
+    // 댓글 내용이 비어있는지 확인
+    if (!commentText) {
+      alert("댓글 내용을 입력해주세요.");
+      return;
+    }
+
+    // URL에서 게시물 ID 추출
+    const postId = getPostIdFromUrl();
+
+    // 댓글 데이터 객체
+    const commentData = {
+      content: commentText,
+      post_id: postId // 게시물 ID 추가
+    };
+
+    fetch(`/api/comments/${postId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(commentData)
+    })
+            .then(response => {
+              if (response.ok) {
+                alert('댓글이 성공적으로 추가되었습니다.');
+                document.getElementById('commentInput').value = ''; // 입력 필드 초기화
+                loadComments(postId); // 댓글 목록 갱신
+              } else {
+                return response.json().then(err => {
+                  alert('댓글 추가에 실패했습니다: ' + err.message);
+                });
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert('서버 오류가 발생했습니다.');
+            });
+  }
+
+  // URL에서 postId 추출
+  function getPostIdFromUrl() {
+    const urlSegments = window.location.pathname.split('/');
+    return urlSegments[urlSegments.length - 1]; // URL의 마지막 부분이 postId
+  }
+
+  // 특정 게시글 postId에 적힌 글만 로드
+  function loadComments(postId) {
+    fetch(`/api/comments/post/${postId}`)
+            .then(response => response.json())
+            .then(comments => {
+              const commentList = document.getElementById('commentList');
+              commentList.innerHTML = '';  // 기존 댓글 목록 초기화
+
+              comments.forEach(comment => {
+                const li = document.createElement('li');
+                const formattedDate = new Date(comment.createdAt).toLocaleString(); // 로컬 시간으로 포맷
+                li.textContent = `${comment.author} (${formattedDate}): ${comment.content}`;
+
+                // 수정 버튼
+                const editButton = document.createElement('button');
+                editButton.textContent = '수정';
+                editButton.classList.add('button'); // 기본 버튼 스타일
+                editButton.onclick = () => editComment(comment); // 수정 함수 호출
+                li.appendChild(editButton); // 수정 버튼을 리스트 항목에 추가
+
+                // 삭제 버튼
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = '삭제';
+                deleteButton.classList.add('button', 'button-danger'); // 삭제 버튼 스타일
+                deleteButton.onclick = () => deleteComment(comment.id); // 삭제 함수 호출
+                li.appendChild(deleteButton); // 삭제 버튼을 리스트 항목에 추가
+
+                commentList.appendChild(li);
+              });
+            })
+            .catch(error => console.error('Error fetching comments:', error));
+  }
+
+  // 댓글 삭제 함수
+  function deleteComment(commentId) {
+    const postId = getPostIdFromUrl(); // 게시물 ID 가져오기
+
+    // 삭제 확인 팝업
+    const confirmed = confirm("댓글을 정말로 삭제하시겠습니까?");
+    if (!confirmed) {
+      return; // 사용자가 '취소'를 선택하면 함수를 종료합니다.
+    }
+
+    fetch(`/api/comments/${commentId}`, {
+      method: 'DELETE', // DELETE 요청
+    })
+            .then(response => {
+              if (response.ok) {
+                alert('댓글이 성공적으로 삭제되었습니다.');
+                loadComments(postId); // 댓글 목록 새로고침
+              } else {
+                alert('댓글 삭제에 실패했습니다.');
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert('서버 오류가 발생했습니다.');
+            });
+  }
+
+  // 댓글 수정 함수
+  function editComment(comment) {
+    const newContent = prompt("댓글 내용을 수정하세요:", comment.content);
+    if (newContent !== null) { // 사용자가 입력을 취소하지 않은 경우
+      const postId = getPostIdFromUrl();
+      const updatedCommentData = {
+        content: newContent,
+      };
+
+      fetch(`/api/comments/${comment.id}`, {
+        method: 'PUT', // PUT 요청 (수정)
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedCommentData)
+      })
+              .then(response => {
+                if (response.ok) {
+                  alert('댓글이 성공적으로 수정되었습니다.');
+                  loadComments(postId); // 댓글 목록 새로고침
+                } else {
+                  alert('댓글 수정에 실패했습니다.');
+                }
+              })
+              .catch(error => {
+                console.error('Error:', error);
+                alert('서버 오류가 발생했습니다.');
+              });
+    }
+  }
+
+  // 페이지가 로드되면 댓글 목록을 가져옴
+  document.addEventListener('DOMContentLoaded', function() {
+    const postId = getPostIdFromUrl(); // URL에서 postId 가져오기
+    loadComments(postId);  // 게시글 ID로 댓글 로드
+  });
+
+
+
 </script>
 
 </body>
