@@ -2,12 +2,19 @@ package study.supercodingboard.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import study.supercodingboard.entity.user.UserEntity;
+
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "comments")
 public class Comment extends BaseTime { // BaseTime 클래스 상속
 
@@ -18,15 +25,12 @@ public class Comment extends BaseTime { // BaseTime 클래스 상속
     private String content;
     private String author;
 
-    @JsonProperty("post_id")
-    private Long postId; // 게시물 ID
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
-    public Comment() {}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
 
-    public Comment(Long id, String content, String author, Long postId) {
-        this.id = id;
-        this.content = content;
-        this.author = author;
-        this.postId = postId;
-    }
 }
