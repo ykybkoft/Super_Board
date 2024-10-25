@@ -351,15 +351,16 @@
                 const commentElement = document.createElement('div');
                 commentElement.className = 'comment-item';
                 commentElement.innerHTML = `
-              <div class="comment-author">${comment.author}</div>
-              <div class="comment-date">${formattedDate}</div>
-              <div class="comment-content">${comment.content}</div>
-              <div class="comment-actions">
-                <button class="btn btn-secondary" onclick="editComment(${JSON.stringify(comment)})">수정</button>
-                <button class="btn btn-danger" onclick="deleteComment(${comment.id})">삭제</button>
-              </div>
-            `;
-                commentList.appendChild(commentElement);
+                  <div class="comment-author">${comment.author}</div>
+                  <div class="comment-date">${formattedDate}</div>
+                  <div class="comment-content">${comment.content}</div>
+                  <div class="comment-actions">
+                    <button class="btn btn-secondary" onclick="editComment(${comment.id})">수정</button>
+                    <button class="btn btn-danger" onclick="deleteComment(${comment.id})">삭제</button>
+                  </div>
+                  `;
+                  commentList.appendChild(commentElement);
+
               });
             })
             .catch(error => console.error('Error fetching comments:', error));
@@ -393,20 +394,20 @@
   }
 
   // 댓글 수정 함수
-  function editComment(comment) {
-    const newContent = prompt("댓글 내용을 수정하세요:", comment.content);
-    if (newContent !== null) { // 사용자가 입력을 취소하지 않은 경우
-      const postId = getPostIdFromUrl();
+  function editComment(commentId) {
+    const newContent = prompt("댓글 내용을 수정하세요:");
+    if (newContent !== null && newContent.trim() !== '') { // 사용자가 입력을 취소하지 않고 공백이 아닌 경우
+      const postId = getPostIdFromUrl(); // 게시물 ID 가져오기
       const updatedCommentData = {
         content: newContent,
       };
 
-      fetch(`/api/comments/${comment.id}`, {
+      fetch(`/api/comments/${commentId}`, {
         method: 'PUT', // PUT 요청 (수정)
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(updatedCommentData)
+        body: JSON.stringify(updatedCommentData) // 수정된 댓글 내용
       })
               .then(response => {
                 if (response.ok) {
