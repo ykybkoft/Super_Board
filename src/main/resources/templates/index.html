@@ -8,45 +8,41 @@
   <title>SUPER CODING</title>
 </head>
 <body>
-<table class="table">
-  <tr>
-    <td colspan="4" style="text-align: center;"><h2>SUPER CODING</h2></td>
-  </tr>
-  <tr>
-    <td colspan="4">
-      <div class="search-form">
-        <label for="searchEmail"></label><input type="email" id="searchEmail" placeholder="이메일로 검색" required>
-        <button onclick="searchByEmail()">검색</button>
-      </div>
-    </td>
-  </tr>
-  <tr class="header">
-    <td class="num">번호</td>
-    <td class="title">제목</td>
-    <td class="author">작성자</td>
-    <td class="date">작성일</td>
-  </tr>
-  <tbody class="body">
-  <tr th:each="post : ${posts}">
-    <td th:text="${post.id}"></td>
-    <td class="title">
-      <a th:href="@{'/posts/' + ${post.id}}" th:text="${post.title}"></a>
-    </td>
-    <td class="author" th:text="${post.author}"></td>
-    <td class="date" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}"></td>
-  </tr>
-  </tbody>
-</table>
-<br>
-<table>
-  <tr>
-    <td>
-      <button onclick="handleWritePost()">글쓰기</button>
-      <button class="user-button" id="login-button" onclick="location.href='http://localhost:8080/api/user'">로그인</button>
-      <button class="user-button" id="logout-button" onclick="clickLogout()">로그아웃</button>
-    </td>
-  </tr>
-</table>
+<div class="container">
+  <h2>SUPER CODING</h2>
+
+  <div class="search-form">
+    <input type="email" id="searchEmail" placeholder="이메일로 검색" required>
+    <button onclick="searchByEmail()">검색</button>
+  </div>
+
+  <table class="board-table">
+    <thead>
+    <tr>
+      <th class="num">번호</th>
+      <th class="title">제목</th>
+      <th class="author">작성자</th>
+      <th class="date">작성일</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="post : ${posts}">
+      <td th:text="${post.id}"></td>
+      <td class="title">
+        <a th:href="@{'/posts/' + ${post.id}}" th:text="${post.title}"></a>
+      </td>
+      <td class="author" th:text="${post.author}"></td>
+      <td class="date" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}"></td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div class="button-group">
+    <button onclick="handleWritePost()" class="btn btn-primary">글쓰기</button>
+    <button class="btn btn-secondary user-button" id="login-button" onclick="location.href='http://localhost:8080/api/user'">로그인</button>
+    <button class="btn btn-secondary user-button" id="logout-button" onclick="clickLogout()">로그아웃</button>
+  </div>
+</div>
 
 <script>
   const token = window.localStorage.getItem('token');
@@ -56,7 +52,6 @@
   function clickLogout(){
     const email = getEmailFromToken();
     const data = { email: email };
-
     fetch('/api/logout', {
       method: 'POST',
       headers: {
@@ -91,9 +86,9 @@
   function handleWritePost() {
     if (token === null) {
       alert('로그인이 필요합니다.');
-      location.href = 'http://localhost:8080/api/user'; // 로그인 요청 페이지로 이동
+      location.href = 'http://localhost:8080/api/user';
     } else {
-      location.href = '/boardWriteForm'; // 글쓰기 페이지로 이동
+      location.href = '/boardWriteForm';
     }
   }
 

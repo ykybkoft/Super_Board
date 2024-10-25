@@ -6,171 +6,244 @@
   <title>게시판 상세페이지</title>
 
   <style>
-    /* 배경 설정 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    }
+
     body {
-      font-family: 'Arial', sans-serif;
-      background-color: #f9f9f9; /* 전체 배경색 */
-      margin: 0; /* 기본 마진 제거 */
-      padding: 20px; /* 전체 여백 추가 */
-      display: flex;
-      flex-direction: column; /* 세로 방향으로 정렬 */
-      align-items: center; /* 가로 중앙 정렬 */
+      background: #f5f7fa;
+      padding: 2rem;
     }
 
-    /* 로고 영역 */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      padding: 2rem;
+    }
+
     .logo {
-      margin-bottom: 20px; /* 로고와 내용 사이 여백 */
-      font-size: 2rem; /* 로고 크기 */
-      font-weight: bold; /* 로고 굵기 */
-    }
-
-    .post-container {
-      background-color: #ffffff; /* 게시글 배경색 */
-      padding: 2rem; /* 패딩 추가 */
-      border-radius: 8px; /* 약간의 둥글기 추가 */
-      width: 80%;
-      max-width: 800px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 추가 */
-    }
-
-    /* 게시글 제목 스타일 */
-    .post-header {
+      color: #0f7ef8;
+      font-size: 2rem;
+      font-weight: bold;
       text-align: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .post-title {
-      font-size: 2.5rem;
-      color: #333;
-      margin-bottom: 0.5rem; /* 제목 아래 여백 추가 */
-      border-bottom: 2px solid #87CEEB; /* 제목 아래 구분선 색상 변경 */
-      padding-bottom: 0.5rem; /* 구분선과 제목 사이 여백 추가 */
-    }
-
-    .post-meta {
-      font-size: 0.9rem;
-      color: #888;
-      margin-bottom: 1rem; /* 메타 정보 아래 여백 추가 */
-    }
-
-    /* 게시글 내용 스타일 */
-    .post-content {
-      line-height: 1.8;
-      color: #555;
       margin-bottom: 2rem;
     }
 
-    /* 버튼 스타일 */
-    .button {
-      background-color: #87CEEB; /* 기본 버튼 색상을 연한 하늘색으로 변경 */
-      color: white;
-      border: none;
-      padding: 10px 15px; /* 패딩 조정 */
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 1rem;
-      margin: 5px 2px;
+    .post-header {
+      border-bottom: 2px solid #e1e1e1;
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .post-title {
+      font-size: 1.8rem;
+      color: #333;
+      margin-bottom: 1rem;
+    }
+
+    .post-meta {
+      display: flex;
+      gap: 1rem;
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .post-content {
+      line-height: 1.8;
+      color: #444;
+      margin-bottom: 3rem;
+      min-height: 200px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 8px;
+      justify-content: space-between;
+      margin-bottom: 3rem;
+    }
+
+    .button-group-left {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 500;
       cursor: pointer;
-      border-radius: 5px; /* 둥글게 조정 */
-      transition: background-color 0.3s; /* 버튼 호버 시 색상 변화 효과 */
+      transition: all 0.2s;
+      border: none;
+      font-size: 0.95rem;
     }
 
-    .button:hover {
-      background-color: #7EC0EE; /* 호버 시 색상 변화 (어두운 하늘색) */
-    }
-
-    /* 삭제 버튼 스타일 */
-    .button-danger {
-      background-color: #f44336; /* 삭제 버튼 색상 */
-    }
-
-    .button-danger:hover {
-      background-color: #e53935; /* 삭제 버튼 호버 시 색상 변화 */
-    }
-
-    /* 게시글 하단 스타일 */
-    .post-footer {
-      display: flex; /* Flexbox로 설정 */
-      justify-content: space-between; /* 양쪽 끝으로 정렬 */
-      align-items: center; /* 수직 중앙 정렬 */
-      margin-top: 1rem; /* 상단 여백 */
-    }
-
-    /* 댓글 영역 스타일 */
-    .comment-section {
-      margin-top: 2rem; /* 댓글 섹션 위쪽 여백 */
-      border-top: 1px solid #ccc; /* 댓글 구분선 */
-      padding-top: 1rem; /* 구분선 아래 여백 */
-    }
-
-    /* 댓글 입력 필드 스타일 */
-    .comment-input {
-      width: 100%; /* 너비를 100%로 설정 */
-      padding: 10px; /* 패딩 추가 */
-      border: 1px solid #ccc; /* 테두리 색상 */
-      border-radius: 5px; /* 둥글게 조정 */
-      margin-bottom: 1rem; /* 입력 필드와 버튼 사이 여백 */
-    }
-
-    /* 댓글 목록 스타일 */
-    .comment {
-      padding: 0.5rem;
-      border-bottom: 1px solid #eee; /* 댓글 구분선 */
-      color: #555;
-      display: flex; /* 댓글과 버튼을 가로로 정렬 */
-      justify-content: space-between; /* 양 끝으로 정렬 */
-      align-items: center; /* 수직 중앙 정렬 */
-    }
-
-    /* 목록 버튼 스타일 */
-    .button-list {
-      background-color: #90EE90; /* 연한 그린 색상 */
+    .btn-primary {
+      background: #0f7ef8;
       color: white;
     }
 
-    .button-list:hover {
-      background-color: #7CFC7C; /* 호버 시 색상 변화 (어두운 그린) */
+    .btn-primary:hover {
+      background: #0b6ad3;
+    }
+
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #bb2d3b;
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #333;
+      border: 1px solid #e1e1e1;
+    }
+
+    .btn-secondary:hover {
+      background: #f5f5f5;
+    }
+
+    /* 댓글 섹션 스타일 */
+    .comment-section {
+      margin-top: 3rem;
+      border-top: 1px solid #e1e1e1;
+      padding-top: 2rem;
+    }
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .comment-header h3 {
+      color: #333;
+      font-size: 1.2rem;
+    }
+
+    .comment-input-container {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .comment-input {
+      width: 100%;
+      padding: 1rem;
+      border: 1px solid #e1e1e1;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      resize: vertical;
+      min-height: 100px;
+      font-size: 0.95rem;
+    }
+
+    .comment-input:focus {
+      outline: none;
+      border-color: #0f7ef8;
+      box-shadow: 0 0 0 3px rgba(15, 126, 248, 0.1);
+    }
+
+    .comment-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .comment-item {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    .comment-author {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .comment-date {
+      color: #666;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    .comment-content {
+      color: #444;
+      line-height: 1.6;
+    }
+
+    .comment-actions {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .comment-actions button {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .no-comments {
+      text-align: center;
+      color: #666;
+      padding: 2rem;
+      background: #f8f9fa;
+      border-radius: 8px;
     }
   </style>
 </head>
 <body>
-<div class="logo">SUPER CODING</div> <!-- 로고 영역 추가 -->
+<div class="container">
+  <div class="logo">SUPER CODING</div>
 
-<div class="post-container">
   <div class="post-header">
-    <h3 class="post-title" th:text="${post.title}">게시글 제목</h3>
-    <p class="post-meta">작성자: <span th:text="${post.author}">작성자 이름</span> |
-      작성일: <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">2024-10-23</span></p>
-  </div>
-
-  <div class="post-content">
-    <p th:text="${post.content}">
-      게시글의 내용이 여기에 표시됩니다. 긴 텍스트일 경우 자동으로 줄 바꿈이 됩니다.
-    </p>
-  </div>
-
-  <div class="post-footer">
-    <div>
-      <button class="button" id="editButton" th:onclick="'location.href=\'/postUpdate/' + ${post.id} + '\''">수정하기</button>
-      <button class="button button-danger" id="deleteButton" th:onclick="'deletePost(' + ${post.id} + ')'">삭제하기</button>
+    <h1 class="post-title" th:text="${post.title}">게시글 제목</h1>
+    <div class="post-meta">
+      <span>작성자: <span th:text="${post.author}">작성자 이름</span></span>
+      <span>작성일: <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">2024-10-23</span></span>
     </div>
-    <button class="button button-list" onclick="location.href='/'">목록으로</button> <!-- 목록 버튼 색상 변경 -->
-  </div>
-</div>
-
-<!-- 댓글 섹션 시작 -->
-<div class="comment-section">
-
-  <h2>댓글</h2>
-  <div id="commentList">
-    <!-- 댓글 목록은 여기에 추가됩니다 -->
-
   </div>
 
-  <textarea class="comment-input" id="commentInput" placeholder="댓글을 작성하세요..."></textarea>
-  <button class="button" th:onclick="'addComment(' + ${post.id} + ')'">댓글 작성</button>
+  <div class="post-content" th:text="${post.content}">
+    게시글 내용이 여기에 표시됩니다.
+  </div>
 
+  <div class="button-group">
+    <div class="button-group-left">
+      <button class="btn btn-primary" id="editButton" th:onclick="'location.href=\'/postUpdate/' + ${post.id} + '\''">수정하기</button>
+      <button class="btn btn-danger" id="deleteButton" th:onclick="'deletePost(' + ${post.id} + ')'">삭제하기</button>
+    </div>
+    <button class="btn btn-secondary" onclick="location.href='/'">목록으로</button>
+  </div>
+
+  <div class="comment-section">
+    <div class="comment-header">
+      <h3>댓글</h3>
+    </div>
+
+    <div class="comment-input-container">
+      <textarea class="comment-input" id="commentInput" placeholder="댓글을 작성하세요..."></textarea>
+      <button class="btn btn-primary" th:onclick="'addComment(' + ${post.id} + ')'">댓글 작성</button>
+    </div>
+
+    <div id="commentList" class="comment-list">
+      <!-- 댓글이 여기에 동적으로 추가됩니다 -->
+    </div>
+  </div>
 </div>
 <!-- 댓글 섹션 끝 -->
 
@@ -262,28 +335,31 @@
             .then(response => response.json())
             .then(comments => {
               const commentList = document.getElementById('commentList');
-              commentList.innerHTML = '';  // 기존 댓글 목록 초기화
+              commentList.innerHTML = '';
+
+              if (comments.length === 0) {
+                commentList.innerHTML = `
+              <div class="no-comments">
+                아직 작성된 댓글이 없습니다.
+              </div>
+            `;
+                return;
+              }
 
               comments.forEach(comment => {
-                const li = document.createElement('li');
-                const formattedDate = new Date(comment.createdAt).toLocaleString(); // 로컬 시간으로 포맷
-                li.textContent = `${comment.author} (${formattedDate}): ${comment.content}`;
-
-                // 수정 버튼
-                const editButton = document.createElement('button');
-                editButton.textContent = '수정';
-                editButton.classList.add('button'); // 기본 버튼 스타일
-                editButton.onclick = () => editComment(comment); // 수정 함수 호출
-                li.appendChild(editButton); // 수정 버튼을 리스트 항목에 추가
-
-                // 삭제 버튼
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = '삭제';
-                deleteButton.classList.add('button', 'button-danger'); // 삭제 버튼 스타일
-                deleteButton.onclick = () => deleteComment(comment.id); // 삭제 함수 호출
-                li.appendChild(deleteButton); // 삭제 버튼을 리스트 항목에 추가
-
-                commentList.appendChild(li);
+                const formattedDate = new Date(comment.createdAt).toLocaleString();
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment-item';
+                commentElement.innerHTML = `
+              <div class="comment-author">${comment.author}</div>
+              <div class="comment-date">${formattedDate}</div>
+              <div class="comment-content">${comment.content}</div>
+              <div class="comment-actions">
+                <button class="btn btn-secondary" onclick="editComment(${JSON.stringify(comment)})">수정</button>
+                <button class="btn btn-danger" onclick="deleteComment(${comment.id})">삭제</button>
+              </div>
+            `;
+                commentList.appendChild(commentElement);
               });
             })
             .catch(error => console.error('Error fetching comments:', error));
